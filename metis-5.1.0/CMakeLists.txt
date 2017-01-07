@@ -11,11 +11,11 @@ else()
 endif()
 
 # Configure libmetis library.
-if(SHARED)
+if(BUILD_SHARED)
   set(METIS_LIBRARY_TYPE SHARED)
 else()
   set(METIS_LIBRARY_TYPE STATIC)
-endif(SHARED)
+endif(BUILD_SHARED)
 
 set(GKLIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${GKLIB_PATH})
 

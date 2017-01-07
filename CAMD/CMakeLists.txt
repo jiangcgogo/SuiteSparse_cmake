@@ -10,7 +10,7 @@ file(GLOB CAMD_SRCS "Source/*.c")
 
 set(LIBRARY_NAME "camd")
 
-add_library(${LIBRARY_NAME} ${CAMD_SRCS})
+add_library(${LIBRARY_NAME} ${SuiteSparse_BUILD_SHARED} ${CAMD_SRCS})
 target_link_libraries(${LIBRARY_NAME} m)
 
 install(DIRECTORY Include/

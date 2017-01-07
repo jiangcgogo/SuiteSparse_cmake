@@ -6,7 +6,8 @@ include_directories(../SuiteSparse_config)
 include_directories(../AMD/Include)
 include_directories(../CAMD/Include)
 include_directories(../COLAMD/Include)
-include_directories(../CCOLAMD/Includ)
+include_directories(../CCOLAMD/Include)
+include_directories(../metis-5.1.0/include)
 
 option(WITH_CHOLMOD_CHECK "" ON)
 option(WITH_CHOLMOD_CHOLESKY "" ON)
@@ -36,7 +37,7 @@ file(GLOB CHOLMOD_TEMPLATE_SRCS
   "MatrixOps/t*.c"
   "Supernodal/t*.c"
   "Modify/t*.c"
-  "Partition/*.c")
+  "Partition/t*.c")
 list(REMOVE_ITEM CHOLMOD_SRCS ${CHOLMOD_TEMPLATE_SRCS})
 
 if(NOT WITH_CHOLMOD_PRINT)
@@ -76,7 +77,7 @@ endif()
 
 set(LIBRARY_NAME "cholmod")
 
-add_library(${LIBRARY_NAME} ${CHOLMOD_SRCS})
+add_library(${LIBRARY_NAME} ${SuiteSparse_BUILD_SHARED} ${CHOLMOD_SRCS})
 target_link_libraries(${LIBRARY_NAME} m)
 
 install(DIRECTORY Include/

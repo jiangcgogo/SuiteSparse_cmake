@@ -10,7 +10,7 @@ file(GLOB COLAMD_SRCS "Source/*.c")
 
 set(LIBRARY_NAME "colamd")
 
-add_library(${LIBRARY_NAME} ${COLAMD_SRCS})
+add_library(${LIBRARY_NAME} ${SuiteSparse_BUILD_SHARED} ${COLAMD_SRCS})
 target_link_libraries(${LIBRARY_NAME} m)
 
 install(DIRECTORY Include/
