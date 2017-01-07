@@ -121,6 +121,10 @@ static int TEMPLATE (cholmod_super_numeric)
 
     /* these variables are not used if the GPU module is not installed */
 
+#ifndef GPU_BLAS
+#define GPU_BLAS
+#endif
+
 #ifdef GPU_BLAS
     Int ndescendants, mapCreatedOnGpu, supernodeUsedGPU,
         idescendant, dlarge, dsmall, skips ;

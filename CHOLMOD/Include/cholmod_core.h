@@ -278,6 +278,10 @@
 #endif
 
 /* Define buffering parameters for GPU processing */
+#ifndef GPU_BLAS
+#define GPU_BLAS
+#endif
+
 #ifdef GPU_BLAS
 #include <cublas_v2.h>
 #endif

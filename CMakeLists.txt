@@ -1,15 +1,80 @@
 cmake_minimum_required(VERSION 2.8)
-project(SuiteSparse)
+project(SuiteSparse CXX C)
 
 set(SS_MAJOR_VERSION 4)
 set(SS_MINOR_VERSION 5)
 set(SS_PATCH_VERSION 4)
 set(SS_VERSION ${SS_MAJOR_VERSION}.${SS_MINOR_VERSION}.${SS_PATCH_VERSION})
 
+include(cmake/SuiteSparseUtils.cmake)
+
+ss_clear_vars(SuiteSparseModules_TARGETS)
+
+# ----------------------------------------------------------------------------
+# Break in case of popular CMake configuration mistakes
+# ----------------------------------------------------------------------------
+if(NOT CMAKE_SIZEOF_VOID_P GREATER 0)
+  message(FATAL_ERROR "CMake fails to deterimine the bitness of target platform.
+  Please check your CMake and compiler installation. If you are crosscompiling then ensure that your CMake toolchain file correctly sets the compiler details.")
+endif()
+
+# ----------------------------------------------------------------------------
+# Detect compiler and target platform architecture
+# ----------------------------------------------------------------------------
+include(cmake/SuiteSparseDetectCXXCompiler.cmake)
+
+# Add these standard paths to the search paths for FIND_LIBRARY
+# to find libraries from these locations first
+if(UNIX AND NOT ANDROID)
+  if(X86_64 OR CMAKE_SIZEOF_VOID_P EQUAL 8)
+    if(EXISTS /lib64)
+      list(APPEND CMAKE_LIBRARY_PATH /lib64)
+    else()
+      list(APPEND CMAKE_LIBRARY_PATH /lib)
+    endif()
+    if(EXISTS /usr/lib64)
+      list(APPEND CMAKE_LIBRARY_PATH /usr/lib64)
+    else()
+      list(APPEND CMAKE_LIBRARY_PATH /usr/lib)
+    endif()
+  elseif(X86 OR CMAKE_SIZEOF_VOID_P EQUAL 4)
+    if(EXISTS /lib32)
+      list(APPEND CMAKE_LIBRARY_PATH /lib32)
+    else()
+      list(APPEND CMAKE_LIBRARY_PATH /lib)
+    endif()
+    if(EXISTS /usr/lib32)
+      list(APPEND CMAKE_LIBRARY_PATH /usr/lib32)
+    else()
+      list(APPEND CMAKE_LIBRARY_PATH /usr/lib)
+    endif()
+  endif()
+endif()
+
+# Add these standard paths to the search paths for FIND_PATH
+# to find include files from these locations first
+if(MINGW)
+  if(EXISTS /mingw)
+      list(APPEND CMAKE_INCLUDE_PATH /mingw)
+  endif()
+  if(EXISTS /mingw32)
+      list(APPEND CMAKE_INCLUDE_PATH /mingw32)
+  endif()
+  if(EXISTS /mingw64)
+      list(APPEND CMAKE_INCLUDE_PATH /mingw64)
+  endif()
+endif()
+
 option(BUILD_SHARED "" ON)
+option(WITH_CUDA "" OFF)
 
 if(BUILD_SHARED)
   set(SuiteSparse_BUILD_SHARED SHARED)
+endif()
+
+if(WITH_CUDA)
+  include(cmake/SuiteSparseUtils.cmake)
+  include(cmake/SuiteSparseDetectCUDA.cmake)
 endif()
 
 add_subdirectory("metis-5.1.0")

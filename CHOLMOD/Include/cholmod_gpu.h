@@ -14,6 +14,10 @@
 #ifndef CHOLMOD_GPU_H
 #define CHOLMOD_GPU_H
 
+#ifndef GPU_BLAS
+#define GPU_BLAS
+#endif
+
 #ifdef GPU_BLAS
 #include "omp.h"
 #include <fenv.h>

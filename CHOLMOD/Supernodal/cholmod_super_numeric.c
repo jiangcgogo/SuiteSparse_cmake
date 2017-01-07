@@ -59,6 +59,10 @@
 #include "cholmod_internal.h"
 #include "cholmod_supernodal.h"
 
+#ifndef GPU_BLAS
+#define GPU_BLAS
+#endif
+
 #ifdef GPU_BLAS
 #include "cholmod_gpu.h"
 #endif

@@ -22,6 +22,12 @@ option(WITH_CHOLMOD_PRINT "" OFF)
 
 add_definitions(-Wno-unused-parameter)
 
+file(GLOB AMD_HEADERS "../AMD/Include/*.h")
+file(GLOB CAMD_HEADERS "../CAMD/Include/*.h")
+file(GLOB COLAMD_HEADERS "../COLAMD/Include/*.h")
+file(GLOB CCOLAMD_HEADERS "../CCOLAMD/Include/*.h")
+file(GLOB CHOLMOD_HEADERS "../Include/*.h")
+
 file(GLOB CHOLMOD_SRCS
   "Core/*.c"
   "Check/*.c"
@@ -77,7 +83,13 @@ endif()
 
 set(LIBRARY_NAME "cholmod")
 
-add_library(${LIBRARY_NAME} ${SuiteSparse_BUILD_SHARED} ${CHOLMOD_SRCS})
+if(WITH_CUDA)
+  set_source_files_properties(${CHOLMOD_SRCS}
+    PROPERTIES COMPILE_FLAGS "-DGPU_BLAS")
+endif()
+
+cuda_add_library(${LIBRARY_NAME} ${SuiteSparse_BUILD_SHARED} ${CHOLMOD_SRCS})
+cuda_add_cublas_to_target(${LIBRARY_NAME})
 target_link_libraries(${LIBRARY_NAME} m)
 
 install(DIRECTORY Include/
